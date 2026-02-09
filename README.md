@@ -1,13 +1,27 @@
 # Airfoil XAI Analysis - Hybrid Regression Model
 
 ## Overview
-This repository contains a complete Explainable AI (XAI) analysis for a hybrid regression model predicting airfoil-related phenomena. The analysis uses SHAP (SHapley Additive exPlanations) to provide model-agnostic explanations.
+This repository contains a complete Explainable AI (XAI) analysis for a hybrid regression model predicting airfoil-related phenomena. The analysis uses SHAP (SHapley Additive exPlanations) to provide model-agnostic explanations. The project compares multiple regression models and selects the best-performing model for detailed XAI analysis.
+
+## Model Comparison Results
+The project evaluates multiple regression models with the following performance metrics:
+
+| Model | RMSE | MAE | R² |
+|-------|------|-----|-----|
+| Neural Network (MLP) | 3.0150 | 2.3104 | **0.7626** |
+| Linear Regression | 4.3512 | 3.4314 | 0.5056 |
+| Ridge | 4.4062 | 3.5078 | 0.4931 |
+| Elastic Net | 5.2637 | 4.3421 | 0.2765 |
+| Lasso | 5.2675 | 4.3376 | 0.2755 |
+
+Based on these results, the hybrid regression model (Linear + MLP residual learning) was selected for XAI analysis, combining the interpretability of linear models with the predictive power of neural networks.
 
 ## Files Included
 
 ### Main Analysis Scripts
 - `xai_hybrid_regression.py` - Main XAI analysis script
 - `hybrid_model_module.py` - Hybrid regression model implementation
+- `model_comparison_metrics.py` - Script for comparing multiple regression models
 - `create_mock_model.py` - Script to create mock trained model
 - `check_xai_setup.py` - Environment verification script
 
@@ -16,6 +30,8 @@ This repository contains a complete Explainable AI (XAI) analysis for a hybrid r
 - `xai_outputs/airfoil_shap_beeswarm.png` - SHAP summary/beeswarm plot  
 - `xai_outputs/airfoil_local_force_plot.png` - Local explanation plot
 - `xai_analysis_report.md` - Detailed analysis report
+- `metrics_summary.md` - Model comparison metrics summary
+- `model_comparison_results.csv` - Raw comparison metrics data
 
 ### Configuration
 - `requirements_xai.txt` - Python dependencies
