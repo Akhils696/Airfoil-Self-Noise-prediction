@@ -16,7 +16,8 @@
 
 | Model | RMSE | MAE | R² | Adjusted R² | MAPE |
 |-------|------|-----|-----|-------------|------|
-| Neural Network (MLP) | 3.0150 | 2.3104 | **0.7626** | **0.7617** | **1.8429** |
+| Hybrid (Lin+MLP) | 1.5826 | 1.1525 | **0.9346** | **0.9344** | **0.9199** |
+| Neural Network (MLP) | 3.0150 | 2.3104 | 0.7626 | 0.7617 | 1.8429 |
 | Linear Regression | 4.3512 | 3.4314 | 0.5056 | 0.5038 | 2.7476 |
 | Ridge | 4.4062 | 3.5078 | 0.4931 | 0.4911 | 2.8130 |
 | Elastic Net | 5.2637 | 4.3421 | 0.2765 | 0.2738 | 3.4959 |
@@ -25,47 +26,54 @@
 ### Rankings
 
 #### By R² (Coefficient of Determination - Higher is Better)
-1. **Neural Network (MLP)**: 0.7626
-2. Linear Regression: 0.5056
-3. Ridge: 0.4931
-4. Elastic Net: 0.2765
-5. Lasso: 0.2755
+1. **Hybrid (Lin+MLP)**: 0.9346
+2. Neural Network (MLP): 0.7626
+3. Linear Regression: 0.5056
+4. Ridge: 0.4931
+5. Elastic Net: 0.2765
+6. Lasso: 0.2755
 
 #### By RMSE (Root Mean Square Error - Lower is Better)
-1. **Neural Network (MLP)**: 3.0150
-2. Linear Regression: 4.3512
-3. Ridge: 4.4062
-4. Elastic Net: 5.2637
-5. Lasso: 5.2675
+1. **Hybrid (Lin+MLP)**: 1.5826
+2. Neural Network (MLP): 3.0150
+3. Linear Regression: 4.3512
+4. Ridge: 4.4062
+5. Elastic Net: 5.2637
+6. Lasso: 5.2675
 
 #### By MAE (Mean Absolute Error - Lower is Better)
-1. **Neural Network (MLP)**: 2.3104
-2. Linear Regression: 3.4314
-3. Ridge: 3.5078
-4. Lasso: 4.3376
-5. Elastic Net: 4.3421
+1. **Hybrid (Lin+MLP)**: 1.1525
+2. Neural Network (MLP): 2.3104
+3. Linear Regression: 3.4314
+4. Ridge: 3.5078
+5. Lasso: 4.3376
+6. Elastic Net: 4.3421
 
 ### Key Findings
 
-1. **Neural Network (MLP) performs best** across all metrics:
-   - Highest R² (0.7626) indicating excellent predictive power
-   - Lowest RMSE (3.0150) and MAE (2.3104) indicating minimal prediction errors
-   - Lowest MAPE (1.8429%) indicating high accuracy relative to actual values
+1. **Hybrid Model performs best** across all metrics:
+   - Highest R² (0.9346) indicating exceptional predictive power
+   - Lowest RMSE (1.5826) and MAE (1.1525) indicating minimal prediction errors
+   - Lowest MAPE (0.9199%) indicating high accuracy relative to actual values
 
-2. **Linear Regression is the best traditional model**:
-   - Second-best performance with R² of 0.5056
+2. **Neural Network (MLP) is second best**:
+   - Strong performance with R² of 0.7626
+   - Good balance of accuracy and generalization
+
+3. **Linear Regression is the best traditional model**:
+   - Third-best performance with R² of 0.5056
    - Good balance between interpretability and performance
 
-3. **Regularized models (Lasso, Elastic Net) underperform**:
+4. **Regularized models (Lasso, Elastic Net) underperform**:
    - Similar performance to each other
    - Lower R² values suggesting over-regularization may have reduced model capacity
 
-4. **Ridge regression shows marginal improvement over Linear Regression**:
+5. **Ridge regression shows marginal improvement over Linear Regression**:
    - Slightly lower R² and higher error metrics
    - Minimal benefit from L2 regularization for this dataset
 
 ### Implications for XAI Analysis
 
-The Neural Network (MLP) model demonstrates superior performance and would benefit most from XAI analysis due to its black-box nature. However, the Hybrid Regression model (Linear + MLP residual) that is currently used in the XAI analysis likely combines the interpretability of linear models with the predictive power of neural networks, making it an optimal choice for explainable AI applications.
+The Hybrid model (Linear + MLP residual) demonstrates exceptional performance, confirming its selection for XAI analysis. This model combines the interpretability of linear models with the predictive power of neural networks, making it ideal for explainable AI applications.
 
-The metrics confirm that complex models (MLP, Hybrid) achieve better performance than simpler linear models, justifying the need for advanced XAI techniques to maintain interpretability while achieving high predictive accuracy.
+The significant performance gap between the hybrid model (R²=0.9346) and the next best model (Neural Network at R²=0.7626) validates the choice to focus XAI analysis on the hybrid model, as it provides both superior performance and the need for explainability due to its complex architecture.

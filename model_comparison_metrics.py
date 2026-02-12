@@ -9,6 +9,7 @@ from sklearn.linear_model import LinearRegression, Lasso, Ridge, ElasticNet
 from sklearn.neural_network import MLPRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
+import pickle
 import warnings
 warnings.filterwarnings('ignore')
 
@@ -120,6 +121,29 @@ def evaluate_models(X_train, X_test, y_train, y_test):
             print(f"  Error evaluating {name}: {e}")
             results[name] = {'Error': str(e)}
     
+    # Evaluate Hybrid Model if it exists
+    try:
+        print("Evaluating Hybrid Model (Linear + MLP)...")
+        with open('hybrid_model.pkl', 'rb') as f:
+            hybrid_model = pickle.load(f)
+        
+        # Predict using the hybrid model
+        y_pred_hybrid = hybrid_model.predict(X_test)
+        
+        # Calculate metrics for hybrid model
+        hybrid_metrics = calculate_metrics(y_test, y_pred_hybrid)
+        results['Hybrid (Lin+MLP)'] = hybrid_metrics
+        
+        print(f"  RMSE: {hybrid_metrics['RMSE']:.4f}")
+        print(f"  MAE:  {hybrid_metrics['MAE']:.4f}")
+        print(f"  R²:   {hybrid_metrics['R²']:.4f}")
+        print("-" * 40)
+        
+    except FileNotFoundError:
+        print("Hybrid model file not found. Skipping hybrid model evaluation.")
+    except Exception as e:
+        print(f"Error evaluating hybrid model: {e}")
+    
     return results
 
 def create_comparison_dataframe(results):
@@ -145,23 +169,26 @@ def print_ranking(df):
     print("MODEL RANKINGS")
     print("="*60)
     
-    # Rank by R² (higher is better)
-    df_sorted_r2 = df.sort_values(by='R²', ascending=False)
-    print("\nRanking by R² (Higher is Better):")
-    for i, (_, row) in enumerate(df_sorted_r2.iterrows(), 1):
-        print(f"{i}. {row['Model']}: {row['R²']:.4f}")
+    # Filter out models with errors
+    valid_models = df[~df['Model'].str.contains('Error')]
     
-    # Rank by RMSE (lower is better)
-    df_sorted_rmse = df.sort_values(by='RMSE', ascending=True)
-    print("\nRanking by RMSE (Lower is Better):")
-    for i, (_, row) in enumerate(df_sorted_rmse.iterrows(), 1):
-        print(f"{i}. {row['Model']}: {row['RMSE']:.4f}")
+    if 'R²' in valid_models.columns:
+        df_sorted_r2 = valid_models.sort_values(by='R²', ascending=False)
+        print("\nRanking by R² (Higher is Better):")
+        for i, (_, row) in enumerate(df_sorted_r2.iterrows(), 1):
+            print(f"{i}. {row['Model']}: {row['R²']:.4f}")
     
-    # Rank by MAE (lower is better)
-    df_sorted_mae = df.sort_values(by='MAE', ascending=True)
-    print("\nRanking by MAE (Lower is Better):")
-    for i, (_, row) in enumerate(df_sorted_mae.iterrows(), 1):
-        print(f"{i}. {row['Model']}: {row['MAE']:.4f}")
+    if 'RMSE' in valid_models.columns:
+        df_sorted_rmse = valid_models.sort_values(by='RMSE', ascending=True)
+        print("\nRanking by RMSE (Lower is Better):")
+        for i, (_, row) in enumerate(df_sorted_rmse.iterrows(), 1):
+            print(f"{i}. {row['Model']}: {row['RMSE']:.4f}")
+    
+    if 'MAE' in valid_models.columns:
+        df_sorted_mae = valid_models.sort_values(by='MAE', ascending=True)
+        print("\nRanking by MAE (Lower is Better):")
+        for i, (_, row) in enumerate(df_sorted_mae.iterrows(), 1):
+            print(f"{i}. {row['Model']}: {row['MAE']:.4f}")
 
 def main():
     """Main function to run model comparison"""
@@ -203,9 +230,11 @@ def main():
         print(f"\nResults saved to 'model_comparison_results.csv'")
         
         # Identify best model
-        best_r2_idx = comparison_df['R²'].idxmax()
-        best_model_r2 = comparison_df.loc[best_r2_idx, 'Model']
-        print(f"\nBest model based on R²: {best_model_r2}")
+        valid_models = comparison_df[~comparison_df['Model'].str.contains('Error', na=False)]
+        if 'R²' in valid_models.columns and not valid_models.empty:
+            best_r2_idx = valid_models['R²'].idxmax()
+            best_model_r2 = comparison_df.loc[best_r2_idx, 'Model']
+            print(f"\nBest model based on R²: {best_model_r2}")
         
         return comparison_df
         

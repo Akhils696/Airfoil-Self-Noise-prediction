@@ -8,13 +8,14 @@ The project evaluates multiple regression models with the following performance 
 
 | Model | RMSE | MAE | R² |
 |-------|------|-----|-----|
-| Neural Network (MLP) | 3.0150 | 2.3104 | **0.7626** |
+| Hybrid (Lin+MLP) | 1.5826 | 1.1525 | **0.9346** |
+| Neural Network (MLP) | 3.0150 | 2.3104 | 0.7626 |
 | Linear Regression | 4.3512 | 3.4314 | 0.5056 |
 | Ridge | 4.4062 | 3.5078 | 0.4931 |
 | Elastic Net | 5.2637 | 4.3421 | 0.2765 |
 | Lasso | 5.2675 | 4.3376 | 0.2755 |
 
-Based on these results, the hybrid regression model (Linear + MLP residual learning) was selected for XAI analysis, combining the interpretability of linear models with the predictive power of neural networks.
+Based on these results, the hybrid regression model (Linear + MLP residual learning) was selected for XAI analysis, combining the interpretability of linear models with the predictive power of neural networks. The hybrid model achieves exceptional performance (R²=0.9346), significantly outperforming all other models.
 
 ## Files Included
 
